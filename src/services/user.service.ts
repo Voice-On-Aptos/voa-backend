@@ -32,6 +32,30 @@ export class UserService {
     return updatedUser;
   }
 
+  public async updateProfilePhoto(
+    fileUploaded: {
+      url: string;
+      id: string;
+    },
+    address: any
+  ) {
+    const user = await Users.findOne({ address });
+    if (!user) throw new AppError(404, "user not found");
+    if (fileUploaded) user.profilePhoto = fileUploaded;
+
+    const updatedUser = await user.save();
+    return updatedUser;
+  }
+
+  public async deleteProfilePhoto(address: any) {
+    const user = await Users.findOne({ address });
+    if (!user) throw new AppError(404, "user not found");
+    user.profilePhoto = null;
+
+    const updatedUser = await user.save();
+    return updatedUser;
+  }
+
   private async verifyUsernameUniqueness(username: string) {
     const user = await Users.findOne({ username });
     if (user) return new AppError(400, "Username already exists!");

@@ -58,9 +58,33 @@ export class UserController {
     request: ExtendedRequest,
     response: Response
   ) {
-    const { _id } = request.body;
+    const address = request.address;
+
+    const fileUploaded = request.fileUploaded;
+
+    if (!fileUploaded) {
+      response.status(500).json({ error: "File not uploaded" });
+    }
+
     try {
-      const user = await userService.updateProfile(_id, {});
+      const user = await userService.updateProfilePhoto(fileUploaded!, address);
+      return response.status(200).json(user);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
+
+  public async deleteProfilePhoto(
+    request: ExtendedRequest,
+    response: Response
+  ) {
+    const address = request.address;
+
+    try {
+      const user = await userService.deleteProfilePhoto(address);
       return response.status(200).json(user);
     } catch (error: any) {
       if (error instanceof AppError) {

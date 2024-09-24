@@ -4,7 +4,10 @@ export interface IUser {
   email: string;
   address: string;
   country: string;
-  profilePhoto: string;
+  profilePhoto?: {
+    url: string;
+    id: string;
+  } | null;
   username: string;
   fcmToken?: string;
 }
@@ -12,9 +15,9 @@ export interface IUser {
 const UserSchema = new Schema<IUser>(
   {
     email: { type: String },
-    address: { type: String },
+    address: { type: String, unique: true },
     country: { type: String },
-    profilePhoto: { type: String },
+    profilePhoto: { ulr: { type: String }, id: { type: String } },
     username: { type: String, unique: true, sparse: true },
     fcmToken: { type: String },
   },

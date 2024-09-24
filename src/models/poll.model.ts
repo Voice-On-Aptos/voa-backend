@@ -5,6 +5,7 @@ interface IPoll {
   question: string;
   options: string[];
   votes?: IMember[];
+  seenBy?: IMember[];
   author: IMember;
 }
 
@@ -12,11 +13,19 @@ const PollSchema = new Schema<IPoll>(
   {
     question: { type: String, required: true },
     options: { type: [String], required: true },
-    votes: {
-      types: Schema.Types.ObjectId,
-      ref: "Member",
-    },
-    author: { type: Schema.Types.ObjectId, required: true },
+    seenBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Member",
+      },
+    ],
+    votes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Member",
+      },
+    ],
+    author: { type: Schema.Types.ObjectId, ref: "Member" },
   },
   {
     timestamps: true,

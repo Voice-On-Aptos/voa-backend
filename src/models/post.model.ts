@@ -3,13 +3,24 @@ import { IMember } from "./member.model";
 
 interface IPost {
   author: IMember;
+  seenBy?: IMember[];
   content: string;
   images: string[];
+  applaud: { type: Number; default: 0 };
+  lentVoice: { type: Number; default: 0 };
 }
 
 const PostSchema = new Schema<IPost>(
   {
-    author: { type: Schema.Types.ObjectId, required: true },
+    applaud: { type: Number, default: 0 },
+    lentVoice: { type: Number, default: 0 },
+    author: { type: Schema.Types.ObjectId, ref: "Member" },
+    seenBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Member",
+      },
+    ],
     content: { type: String, required: true },
     images: { type: [String], required: true },
   },

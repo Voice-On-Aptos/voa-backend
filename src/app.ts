@@ -6,13 +6,13 @@ import express, {
   json,
   urlencoded,
 } from "express";
+import fileUpload from "express-fileupload";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import db from "./config/database";
 import { addressAuthentication } from "./middlewares/authorization.middleware";
 import userRoute from "./routes/user.route";
-
 class App {
   public app: Application;
 
@@ -29,6 +29,11 @@ class App {
     this.app.use(helmet());
     this.app.use(cors());
     this.app.use(urlencoded({ extended: false }));
+    this.app.use(
+      fileUpload({
+        limits: { fileSize: 50 * 1024 * 1024 },
+      })
+    );
     this.app.use(addressAuthentication);
   }
 

@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import { IUser } from "./user.model";
 
 interface IProps {
   minimum_voice_power: number;
@@ -17,7 +18,7 @@ export interface ICommunity {
   name: string;
   description: string;
   token_address: string;
-  creator_address: string;
+  creator: IUser;
   twitter: string;
   website: string;
   criterias: string[];
@@ -55,9 +56,9 @@ const CommunitySchema = new Schema<ICommunity>(
       type: String,
       required: true,
     },
-    creator_address: {
-      type: String,
-      required: true,
+    creator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     twitter: {
       type: String,

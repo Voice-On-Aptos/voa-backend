@@ -9,6 +9,7 @@ interface IProposal {
   startDate: Date;
   endDate: Date;
   votes?: IMember[];
+  seenBy?: IMember[];
   author: IMember;
 }
 
@@ -25,11 +26,19 @@ const ProposalSchema = new Schema<IProposal>(
       type: Date,
       required: true,
     },
-    votes: {
-      types: Schema.Types.ObjectId,
-      ref: "Member",
-    },
-    author: { type: Schema.Types.ObjectId, required: true },
+    seenBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Member",
+      },
+    ],
+    votes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Member",
+      },
+    ],
+    author: { type: Schema.Types.ObjectId, ref: "Member" },
   },
   {
     timestamps: true,

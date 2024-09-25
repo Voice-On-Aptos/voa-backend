@@ -47,6 +47,15 @@ export class CommunityController {
   public async updateCommunity(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
     const payload = request.body;
+    const user = request?.user;
+
+    if (user?.address !== payload?.creator)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to update this resource"
+        );
+
     try {
       const community = await communityService.updateCommunity(id, payload);
       return response.status(201).json(community);
@@ -60,6 +69,14 @@ export class CommunityController {
 
   public async deleteCommunity(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
+    const user = request?.user;
+
+    if (!user?.communities?.includes(id))
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to delete this resource"
+        );
     try {
       const community = await communityService.deleteCommunity(id);
       return response.status(201).json(community);

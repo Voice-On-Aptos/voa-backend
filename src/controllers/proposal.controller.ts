@@ -35,6 +35,13 @@ export class ProposalController {
   public async updateProposal(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
     const payload = request.body;
+    const user = request?.user;
+    if (user?._id !== payload?.author)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to update this resource"
+        );
     try {
       const proposal = await proposalService.updateProposal(id, payload);
       return response.status(200).json(proposal);
@@ -48,6 +55,14 @@ export class ProposalController {
 
   public async deleteProposal(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
+    const { author } = request.body;
+    const user = request?.user;
+    if (user?._id !== author)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to delete this resource"
+        );
     try {
       const message = await proposalService.deleteProposal(id);
       return response.status(204).json(message);

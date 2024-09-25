@@ -40,19 +40,19 @@ async function userVerification(
   response: Response,
   next: NextFunction
 ) {
-  const _id = request.header("Authorization")?.replace("Bearer ", "");
+  const address = request.header("Authorization")?.replace("Bearer ", "");
   //add address validation function
-  if (!_id) {
+  if (!address) {
     return response.status(401).json("Unauthorized. Please a valid id");
   }
   try {
-    const user = await User.findById(_id);
+    const user = await User.findOne({ address });
     if (!user)
       return response.status(403).json("Missing Profile: User not found");
     request.user = user;
     return next();
   } catch (error: any) {
-    return response.status(401).json("Invalid");
+    return response.status(401).json("Invalid request");
   }
 }
 

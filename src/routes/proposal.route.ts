@@ -1,19 +1,28 @@
 import express from "express";
 import { CommentController } from "../controllers/comment.controller";
 import { ProposalController } from "../controllers/proposal.controller";
+import {
+  userVerification,
+  verifyIfUserIsInCommunity,
+} from "../middlewares/authorization.middleware";
 
 const proposalController = new ProposalController();
 const commentController = new CommentController();
 
 const router = express.Router();
 
-router.post("/create", proposalController.createProposal);
+router.post(
+  "/create",
+  userVerification,
+  verifyIfUserIsInCommunity,
+  proposalController.createProposal
+);
 
 router
   .route("/:id")
   .get(proposalController.getProposal)
-  .patch(proposalController.updateProposal)
-  .delete(proposalController.deleteProposal);
+  .patch(userVerification, proposalController.updateProposal)
+  .delete(userVerification, proposalController.deleteProposal);
 
 router.post("/:id/vote", proposalController.voteOnProposal);
 router.post("/:id/viewer/:userId", proposalController.updateSeenByProposal);

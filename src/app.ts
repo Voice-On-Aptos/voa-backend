@@ -11,10 +11,6 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import db from "./config/database";
-import {
-  addressAuthentication,
-  verifyIfUserIsInCommunity,
-} from "./middlewares/authorization.middleware";
 import commentRoute from "./routes/comment.route";
 import communityRoute from "./routes/community.route";
 import pollRoute from "./routes/poll.route";
@@ -44,7 +40,6 @@ class App {
         limits: { fileSize: 50 * 1024 * 1024 },
       })
     );
-    this.app.use(addressAuthentication);
   }
 
   private async setupDB() {
@@ -61,21 +56,9 @@ class App {
     });
     this.app.use(`/api/${process.env.API_VERSION}/user`, userRoute);
     this.app.use(`/api/${process.env.API_VERSION}/community`, communityRoute);
-    this.app.use(
-      `/api/${process.env.API_VERSION}/post`,
-      verifyIfUserIsInCommunity,
-      postRoute
-    );
-    this.app.use(
-      `/api/${process.env.API_VERSION}/proposal`,
-      verifyIfUserIsInCommunity,
-      proposalRoute
-    );
-    this.app.use(
-      `/api/${process.env.API_VERSION}/poll`,
-      verifyIfUserIsInCommunity,
-      pollRoute
-    );
+    this.app.use(`/api/${process.env.API_VERSION}/post`, postRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/proposal`, proposalRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/poll`, pollRoute);
     this.app.use(`/api/${process.env.API_VERSION}/comment`, commentRoute);
     this.app.use(`/api/${process.env.API_VERSION}/upload`, uploadRoute);
   }

@@ -35,6 +35,14 @@ export class PostController {
   public async updatePost(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
     const payload = request.body;
+    const user = request?.user;
+    if (user?._id !== payload?.author)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to update this resource"
+        );
+
     try {
       const post = await postService.updatePost(id, payload);
       return response.status(200).json(post);
@@ -48,6 +56,15 @@ export class PostController {
 
   public async deletePost(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
+    const { author } = request.body;
+    const user = request?.user;
+    if (user?._id !== author)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to delete this resource"
+        );
+
     try {
       await postService.deletePost(id);
       return response.status(204).send();

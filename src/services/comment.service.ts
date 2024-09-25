@@ -2,7 +2,7 @@ import { Comment, Reply } from "../models/comment.model";
 
 export class CommentService {
   public async getComments(parentId: string) {
-    const comments = await Comment.find({ parentId });
+    const comments = await Comment.find({ parentId }).populate("replies");
     return comments;
   }
 

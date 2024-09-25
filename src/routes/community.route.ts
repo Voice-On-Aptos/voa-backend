@@ -1,5 +1,6 @@
 import express from "express";
 import { CommunityController } from "../controllers/community.controller";
+import { userVerification } from "../middlewares/authorization.middleware";
 
 const communityController = new CommunityController();
 
@@ -7,13 +8,13 @@ const router = express.Router();
 
 router.get("", communityController.getCommunities);
 
-router.post("/create", communityController.createCommunity);
+router.post("/create", userVerification, communityController.createCommunity);
 
 router
   .route("/:id")
   .get(communityController.getCommunity)
-  .put(communityController.updateCommunity)
-  .delete(communityController.deleteCommunity);
+  .put(userVerification, communityController.updateCommunity)
+  .delete(userVerification, communityController.deleteCommunity);
 
 router.get("/:id/statistics", communityController.getCommunityStats);
 

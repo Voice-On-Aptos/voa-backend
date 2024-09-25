@@ -35,6 +35,14 @@ export class PollController {
   public async updatePoll(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
     const payload = request.body;
+    const user = request?.user;
+    if (user?._id !== payload?.author)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to update this resource"
+        );
+
     try {
       const poll = await pollService.updatePoll(id, payload);
       return response.status(200).json(poll);
@@ -48,6 +56,15 @@ export class PollController {
 
   public async deletePoll(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
+    const { author } = request.body;
+    const user = request?.user;
+    if (user?._id !== author)
+      return response
+        .status(401)
+        .json(
+          "Authorization error. You are not allowed to delete this resource"
+        );
+
     try {
       await pollService.deletePoll(id);
       return response.status(204).send();

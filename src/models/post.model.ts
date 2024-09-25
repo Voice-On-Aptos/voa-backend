@@ -1,32 +1,60 @@
 import { model, Schema } from "mongoose";
-import { IMember } from "./member.model";
+import { ICommunity } from "./community.model";
+import { IUser } from "./user.model";
 
 interface IPost {
-  author: IMember;
-  seenBy?: IMember[];
+  author: IUser;
+  seenBy: IUser[];
   content: string;
-  images: string[];
-  applaud: { type: Number; default: 0 };
-  lentVoice: { type: Number; default: 0 };
+  images: {
+    url: string;
+    id: string;
+  }[];
+  applauds: IUser[];
+  lentVoices: { by: IUser; amount: number }[];
+  community: ICommunity;
 }
 
 const PostSchema = new Schema<IPost>(
   {
-    applaud: { type: Number, default: 0 },
-    lentVoice: { type: Number, default: 0 },
-    author: { type: Schema.Types.ObjectId, ref: "Member" },
+    applauds: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    lentVoices: [
+      {
+        by: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        amount: { type: Number },
+      },
+    ],
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     seenBy: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Member",
+        ref: "User",
       },
     ],
     content: { type: String, required: true },
-    images: { type: [String], required: true },
+    images: [
+      {
+        url: { type: String },
+        id: { type: String },
+      },
+    ],
+    community: {
+      type: Schema.Types.ObjectId,
+      ref: "Community",
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export const Posts = model<IPost>("Post", PostSchema);
+export const Post = model<IPost>("Post", PostSchema);

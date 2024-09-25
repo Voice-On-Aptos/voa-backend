@@ -1,10 +1,11 @@
 import { model, Schema } from "mongoose";
-import { IMember } from "./member.model";
+import { IUser } from "./user.model";
+
 export interface IProps {
   content: string;
-  author: IMember;
-  applaud: Number;
-  lentVoice: Number;
+  author: IUser;
+  applauds: IUser[];
+  lentVoices: { by: IUser; amount: number }[];
 }
 
 export interface IComment extends IProps {
@@ -15,9 +16,22 @@ export interface IComment extends IProps {
 
 const sharedSchemaFields = {
   content: { type: String, required: true },
-  author: { type: String, required: true },
-  applaud: { type: Number, default: 0 },
-  lentVoice: { type: Number, default: 0 },
+  author: { type: Schema.Types.ObjectId, ref: "User" },
+  applauds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "UserIUser",
+    },
+  ],
+  lentVoices: [
+    {
+      by: {
+        type: Schema.Types.ObjectId,
+        ref: "UserIUser",
+      },
+      amount: { type: Number },
+    },
+  ],
 };
 
 const ReplySchema = new Schema<IProps>(
@@ -43,22 +57,22 @@ const CommentSchema = new Schema<IComment>(
   { timestamps: true }
 );
 
-export const Comments = model<IComment>("Comment", CommentSchema);
+export const Comment = model<IComment>("Comment", CommentSchema);
 
 // Discriminator for Post Comments
-export const PostComment = Comments.discriminator(
+export const PostComment = Comment.discriminator(
   "PostComment",
-  new Schema({ targetId: { type: Schema.Types.ObjectId, ref: "post" } })
+  new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "post" } })
 );
 
 // Discriminator for Proposal Comments
-export const ProposalComment = Comments.discriminator(
+export const ProposalComment = Comment.discriminator(
   "ProposalComment",
-  new Schema({ targetId: { type: Schema.Types.ObjectId, ref: "proposal" } })
+  new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "proposal" } })
 );
 
 // // Discriminator for Poll Comments
-// export const PollComment = Comments.discriminator(
+// export const PollComment = Comment.discriminator(
 //   "PollComment",
-//   new Schema({ targetId: { type: Schema.Types.ObjectId, ref: "poll" } })
+//   new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "poll" } })
 // );

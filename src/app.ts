@@ -12,7 +12,14 @@ import mongoose from "mongoose";
 import morgan from "morgan";
 import db from "./config/database";
 import { addressAuthentication } from "./middlewares/authorization.middleware";
+import commentRoute from "./routes/comment.route";
+import communityRoute from "./routes/community.route";
+import pollRoute from "./routes/poll.route";
+import postRoute from "./routes/post.route";
+import proposalRoute from "./routes/proposal.route";
+import uploadRoute from "./routes/upload.route";
 import userRoute from "./routes/user.route";
+
 class App {
   public app: Application;
 
@@ -49,7 +56,13 @@ class App {
     this.app.get("/", (request: Request, response: Response) => {
       response.send("Welcome to VOA");
     });
-    this.app.use("/api/user", userRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/user`, userRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/community`, communityRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/post`, postRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/proposal`, proposalRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/poll`, pollRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/comment`, commentRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/upload`, uploadRoute);
   }
 }
 

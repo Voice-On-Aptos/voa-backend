@@ -22,8 +22,14 @@ export interface ICommunity {
   twitter: string;
   website: string;
   criterias: string[];
-  logo: string;
-  banner: string;
+  logo: {
+    url: string;
+    id: string;
+  };
+  banner: {
+    url: string;
+    id: string;
+  };
   voice_power_rate: number;
   minimum_voice_power_required_to_join: number;
   post: IProps;
@@ -32,6 +38,7 @@ export interface ICommunity {
   poll: IProps;
   token_to_distribute: number;
   distribution_date: Date;
+  members: IUser[];
 }
 
 const CommunitySchema = new Schema<ICommunity>(
@@ -41,12 +48,12 @@ const CommunitySchema = new Schema<ICommunity>(
       required: true,
     },
     banner: {
-      type: String,
-      required: true,
+      url: { type: String, required: true },
+      id: { type: String, required: true },
     },
     logo: {
-      type: String,
-      required: true,
+      url: { type: String, required: true },
+      id: { type: String, required: true },
     },
     description: {
       type: String,
@@ -59,6 +66,7 @@ const CommunitySchema = new Schema<ICommunity>(
     creator: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     twitter: {
       type: String,
@@ -74,15 +82,19 @@ const CommunitySchema = new Schema<ICommunity>(
     },
     post: {
       type: PropSchema,
+      required: true,
     },
     comment: {
       type: PropSchema,
+      required: true,
     },
     proposal: {
       type: PropSchema,
+      required: true,
     },
     poll: {
       type: PropSchema,
+      required: true,
     },
     distribution_date: {
       type: Date,
@@ -100,10 +112,16 @@ const CommunitySchema = new Schema<ICommunity>(
       type: Number,
       required: true,
     },
+    members: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-export const Communities = model<ICommunity>("Community", CommunitySchema);
+export const Community = model<ICommunity>("Community", CommunitySchema);

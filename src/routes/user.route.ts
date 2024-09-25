@@ -5,15 +5,23 @@ import { UserController } from "./../controllers/user.controller";
 const userController = new UserController();
 const router = express.Router();
 
+router.post("/create", userController.createProfile);
+
 router
-  .route("")
+  .route("/:id")
   .get(userController.getProfile)
   .put(userController.updateProfile);
 
-router.post("/create", userController.createProfile);
+router.get("/:id/communities", userController.getUserCommunities);
+router.post("/:id/communities/:communityId/join", userController.joinCommunity);
+router.post(
+  "/:id/communities/:communityId/leave",
+  userController.leaveCommunity
+);
 
-router.patch("/photo", uploadImage, userController.updateProfilePhoto);
-
-router.delete("/photo", deleteImage, userController.deleteProfilePhoto);
+router
+  .route("/:id/photo")
+  .patch(uploadImage, userController.updateProfilePhoto)
+  .delete(deleteImage, userController.deleteProfilePhoto);
 
 export default router;

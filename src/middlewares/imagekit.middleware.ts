@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import ImageKit from "imagekit";
 import { ExtendedRequest } from "../utils/interfaces";
 

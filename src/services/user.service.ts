@@ -107,4 +107,48 @@ export class UserService {
 
     return "Successfully left community";
   }
+
+  public async lendVoice(_id: string, payload: any) {
+    const { toId, voicePower } = payload;
+    await User.findOneAndUpdate(
+      {
+        _id,
+        "lends.by": { $ne: toId },
+      },
+      { $push: { lends: { by: toId, voicePower } } },
+      { new: true }
+    );
+
+    await User.findOneAndUpdate(
+      {
+        _id: toId,
+        "lenders.by": { $ne: _id },
+      },
+      { $push: { lenders: { by: _id, voicePower } } },
+      { new: true }
+    );
+
+    return "Successfully lent voice";
+  }
+
+  public async retractVoice(_id: string, payload: any) {
+    const { toId } = payload;
+    await User.findOneAndUpdate(
+      {
+        _id,
+      },
+      { $pull: { lends: { by: toId } } },
+      { new: true }
+    );
+
+    await User.findOneAndUpdate(
+      {
+        _id: toId,
+      },
+      { $pull: { lenders: { by: _id } } },
+      { new: true }
+    );
+
+    return "Successfully retracted voice";
+  }
 }

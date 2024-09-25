@@ -139,4 +139,34 @@ export class UserController {
       return response.status(500).json(error.message);
     }
   }
+
+  public async lendVoice(request: ExtendedRequest, response: Response) {
+    try {
+      const { id } = request.params;
+      const payload = request.body;
+
+      const message = await userService.lendVoice(id, payload);
+      return response.status(200).json(message);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
+
+  public async retractVoice(request: ExtendedRequest, response: Response) {
+    try {
+      const { id } = request.params;
+      const payload = request.body;
+
+      const message = await userService.retractVoice(id, payload);
+      return response.status(200).json(message);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
 }

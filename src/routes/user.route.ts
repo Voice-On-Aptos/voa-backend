@@ -19,6 +19,9 @@ router.post(
   userController.leaveCommunity
 );
 
+router.post("/:id/lend", userController.lendVoice);
+router.post("/:id/retract", userController.retractVoice);
+
 router
   .route("/:id/photo")
   .patch(uploadImage, userController.updateProfilePhoto)

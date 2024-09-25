@@ -55,4 +55,7 @@ const ProposalSchema = new Schema<IProposal>(
   }
 );
 
+ProposalSchema.index({ title: "text", description: "text" });
+ProposalSchema.index({ options: 1 });
+
 export const Proposal = model<IProposal>("Proposal", ProposalSchema);

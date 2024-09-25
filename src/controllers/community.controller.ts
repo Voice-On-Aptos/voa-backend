@@ -18,6 +18,33 @@ export class CommunityController {
     }
   }
 
+  public async getNewCommunities(request: ExtendedRequest, response: Response) {
+    try {
+      const communities = await communityService.getNewCommunities();
+      return response.status(200).json(communities);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
+
+  public async getPopularCommunities(
+    request: ExtendedRequest,
+    response: Response
+  ) {
+    try {
+      const communities = await communityService.getPopularCommunities();
+      return response.status(200).json(communities);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
+
   public async getCommunity(request: ExtendedRequest, response: Response) {
     const { id } = request.params;
     try {

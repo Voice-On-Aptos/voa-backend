@@ -42,4 +42,6 @@ const PollSchema = new Schema<IPoll>(
   }
 );
 
+PollSchema.index({ question: "text", options: 1 });
+
 export const Poll = model<IPoll>("Poll", PollSchema);

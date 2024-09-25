@@ -7,6 +7,8 @@ const communityController = new CommunityController();
 const router = express.Router();
 
 router.get("", communityController.getCommunities);
+router.get("/new", communityController.getNewCommunities);
+router.get("/popular", communityController.getPopularCommunities);
 
 router.post("/create", userVerification, communityController.createCommunity);
 

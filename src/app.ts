@@ -13,9 +13,11 @@ import morgan from "morgan";
 import db from "./config/database";
 import commentRoute from "./routes/comment.route";
 import communityRoute from "./routes/community.route";
+import feedRoute from "./routes/feed.route";
 import pollRoute from "./routes/poll.route";
 import postRoute from "./routes/post.route";
 import proposalRoute from "./routes/proposal.route";
+import searchRoute from "./routes/search.route";
 import uploadRoute from "./routes/upload.route";
 import userRoute from "./routes/user.route";
 
@@ -54,6 +56,9 @@ class App {
     this.app.get("/", (request: Request, response: Response) => {
       response.send("Welcome to VOA");
     });
+    //add notification routes
+    this.app.use(`/api/${process.env.API_VERSION}/feed`, feedRoute);
+    this.app.use(`/api/${process.env.API_VERSION}/search`, searchRoute);
     this.app.use(`/api/${process.env.API_VERSION}/user`, userRoute);
     this.app.use(`/api/${process.env.API_VERSION}/community`, communityRoute);
     this.app.use(`/api/${process.env.API_VERSION}/post`, postRoute);

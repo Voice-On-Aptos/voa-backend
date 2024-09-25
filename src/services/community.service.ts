@@ -5,20 +5,27 @@ import { Proposal } from "../models/proposal.model";
 import AppError from "../utils/helpers/AppError";
 import { paginateModel } from "../utils/helpers/PaginationHelper";
 
-//get communities
-//get community by id
-//update community by id, (banner, logo, d)
-//delete community
-//join community
-//leave community
-//get community stats
-
-//get user engagement
-
 export class CommunityService {
   public async getCommunities(page: number = 1, limit: number = 100) {
     const query = {};
     const communities = await paginateModel(Community, query, page, limit);
+    return communities;
+  }
+
+  public async getNewCommunities() {
+    const communities = await Community.find()
+      .sort({ createdAt: -1 })
+      .limit(30);
+    return communities;
+  }
+
+  public async getPopularCommunities() {
+    const communities = await Community.find({
+      members: { $size: { $gt: 50 } },
+    })
+      .sort({ members: -1 }) // Sort by number of members in descending order
+      .limit(30); // Limit to 30 communities
+
     return communities;
   }
 

@@ -1,9 +1,11 @@
 import { model, Schema } from "mongoose";
+import { ICommunity } from "./community.model";
 import { IUser } from "./user.model";
 
 export interface IProps {
   content: string;
   author: IUser;
+  community: ICommunity;
   applauds: IUser[];
   lentVoices: { by: IUser; amount: number }[];
 }
@@ -14,9 +16,18 @@ export interface IComment extends IProps {
   replies: IProps[];
 }
 
+export interface IReply extends IProps {
+  comment: IComment;
+}
+
 const sharedSchemaFields = {
   content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: "User" },
+  community: {
+    type: Schema.Types.ObjectId,
+    ref: "Community",
+    required: true,
+  },
   applauds: [
     {
       type: Schema.Types.ObjectId,
@@ -34,12 +45,18 @@ const sharedSchemaFields = {
   ],
 };
 
-const ReplySchema = new Schema<IProps>(
+const ReplySchema = new Schema<IReply>(
   {
     ...sharedSchemaFields,
+    comment: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+    },
   },
   { timestamps: true }
 );
+
+export const Reply = model<IReply>("Reply", ReplySchema);
 
 const CommentSchema = new Schema<IComment>(
   {
@@ -50,9 +67,12 @@ const CommentSchema = new Schema<IComment>(
       required: true,
       enum: ["post", "proposal"], // Discriminator key
     },
-    replies: {
-      type: [ReplySchema],
-    },
+    replies: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Reply",
+      },
+    ],
   },
   { timestamps: true }
 );

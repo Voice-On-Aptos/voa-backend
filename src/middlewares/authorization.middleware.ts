@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { Community } from "../models/community.model";
 import { User } from "../models/user.model";
 
 async function addressAuthentication(
@@ -17,6 +18,21 @@ async function addressAuthentication(
   } catch (error: any) {
     return response.status(401).json("Invalid address");
   }
+}
+
+async function verifyIfUserIsInCommunity(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  const { community, author } = request.body;
+  if (!community || !author)
+    return response.status(400).json("Invalid request");
+  const _community = await Community.findById(community);
+  const members = _community?.members;
+  if (!members?.includes(author))
+    return response.status(400).json("User does not belong to this community");
+  next();
 }
 
 async function userVerification(
@@ -40,4 +56,4 @@ async function userVerification(
   }
 }
 
-export { addressAuthentication, userVerification };
+export { addressAuthentication, userVerification, verifyIfUserIsInCommunity };

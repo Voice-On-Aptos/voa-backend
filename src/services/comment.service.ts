@@ -1,4 +1,4 @@
-import { Comment } from "../models/comment.model";
+import { Comment, Reply } from "../models/comment.model";
 
 export class CommentService {
   public async getComments(parentId: string) {
@@ -39,42 +39,31 @@ export class CommentService {
     return "Successfully applauded comment";
   }
 
-  public async replyComment(_id: string, payload: any) {
-    await Comment.findOneAndUpdate(
-      {
-        _id,
-      },
-      {
-        $push: { replies: payload },
-      },
-      {
-        new: true,
-      }
-    );
+  public async replyComment(payload: any) {
+    const reply = new Reply(payload);
+    await reply.save();
 
     return "Successfully replied comment";
   }
 
   public async applaudReply(_id: string, userId: string) {
-    await Comment.findOneAndUpdate(
+    await Reply.findOneAndUpdate(
       {
         _id,
       },
       {
-        replies: {
-          $set: { applauds: userId },
-        },
+        $set: { applauds: userId },
       },
       {
         new: true,
       }
     );
 
-    return "Successfully applauded comment";
+    return "Successfully applauded reply";
   }
 
   public async lendVoiceOnReply(_id: string, userId: string, amount: number) {
-    await Comment.findOneAndUpdate(
+    await Reply.findOneAndUpdate(
       {
         _id,
         "lentVoices.by": { $ne: userId },
@@ -87,6 +76,6 @@ export class CommentService {
       }
     );
 
-    return "Successfully applauded comment";
+    return "Successfully applauded reply";
   }
 }

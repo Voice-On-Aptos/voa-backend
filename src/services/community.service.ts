@@ -53,8 +53,8 @@ export class CommunityService {
   }
 
   public async getCommunityMembers(_id: string) {
-    const members = await Community.find({ _id }).populate("members");
-    return members;
+    const community = await Community.findOne({ _id }).populate("members");
+    return community?.members;
   }
 
   public async getCommunityProposals(_id: string) {

@@ -6,26 +6,40 @@ import AppError from "../utils/helpers/AppError";
 import { paginateModel } from "../utils/helpers/PaginationHelper";
 
 export class CommunityService {
-  public async getCommunities(page: number = 1, limit: number = 100) {
+  public async getCommunities(page: number = 1, limit: number = 30) {
     const query = {};
-    const communities = await paginateModel(Community, query, page, limit);
+    const communities = await paginateModel(Community, query, page, limit, {}, [
+      "creator",
+      "address",
+    ]);
     return communities;
   }
 
-  public async getNewCommunities() {
-    const communities = await Community.find()
-      .sort({ createdAt: -1 })
-      .limit(30);
+  public async getNewCommunities(page: number = 1, limit: number = 30) {
+    const query = {};
+    const sort = { createdAt: -1 };
+    const communities = await paginateModel(
+      Community,
+      query,
+      page,
+      limit,
+      sort,
+      ["creator", "address"]
+    );
     return communities;
   }
 
-  public async getPopularCommunities() {
-    const communities = await Community.find({
-      members: { $size: { $gt: 50 } },
-    })
-      .sort({ members: -1 }) // Sort by number of members in descending order
-      .limit(30); // Limit to 30 communities
-
+  public async getPopularCommunities(page: number = 1, limit: number = 30) {
+    const query = { members: { $size: { $gt: 50 } } };
+    const sort = { members: -1 };
+    const communities = await paginateModel(
+      Community,
+      query,
+      page,
+      limit,
+      sort,
+      ["creator", "address"]
+    );
     return communities;
   }
 
@@ -46,7 +60,10 @@ export class CommunityService {
   }
 
   public async getCommunity(_id: string) {
-    const community = await Community.findOne({ _id });
+    const community = await Community.findOne({ _id }).populate(
+      "creator",
+      "address"
+    );
     if (!community) throw new AppError(404, "Community not found");
     return community;
   }
@@ -61,22 +78,50 @@ export class CommunityService {
 
   public async getCommunityMembers(_id: string) {
     const community = await Community.findOne({ _id }).populate("members");
-    return community?.members;
+
+    return { name: community?.name, members: community?.members };
   }
 
-  public async getCommunityProposals(_id: string) {
-    const proposals = await Proposal.find({ community: _id });
-    return proposals;
+  public async getCommunityProposals(
+    _id: string,
+    page: number = 1,
+    limit: number = 30
+  ) {
+    const community = await Community.findById(_id);
+    if (!community) {
+      throw new AppError(404, "Community not found");
+    }
+    const query = { community: _id };
+    const proposals = await paginateModel(Proposal, query, page, limit);
+    return { name: community?.name, proposals };
   }
 
-  public async getCommunityPosts(_id: string) {
-    const posts = await Post.find({ community: _id });
-    return posts;
+  public async getCommunityPosts(
+    _id: string,
+    page: number = 1,
+    limit: number = 30
+  ) {
+    const community = await Community.findById(_id);
+    if (!community) {
+      throw new AppError(404, "Community not found");
+    }
+    const query = { community: _id };
+    const posts = await paginateModel(Post, query, page, limit);
+    return { name: community?.name, posts };
   }
 
-  public async getCommunityPolls(_id: string) {
-    const polls = await Poll.find({ community: _id });
-    return polls;
+  public async getCommunityPolls(
+    _id: string,
+    page: number = 1,
+    limit: number = 30
+  ) {
+    const community = await Community.findById(_id);
+    if (!community) {
+      throw new AppError(404, "Community not found");
+    }
+    const query = { community: _id };
+    const polls = await paginateModel(Poll, query, page, limit);
+    return { name: community?.name, polls };
   }
 
   public async getCommunityStats(_id: string) {

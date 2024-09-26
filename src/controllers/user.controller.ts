@@ -7,9 +7,9 @@ import { ExtendedRequest } from "../utils/interfaces";
 const userService = new UserService();
 export class UserController {
   public async getProfile(request: ExtendedRequest, response: Response) {
-    const { id } = request.params;
+    const { _id } = request.user;
     try {
-      const user = await userService.getProfile(id);
+      const user = await userService.getProfile(_id);
       return response.status(200).json(user);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -38,10 +38,10 @@ export class UserController {
   }
 
   public async updateProfile(request: ExtendedRequest, response: Response) {
-    const { id } = request.params;
+    const { _id } = request.user;
     const { email, address, country, username } = request.body;
     try {
-      const user = await userService.updateProfile(id, {
+      const user = await userService.updateProfile(_id, {
         email,
         address,
         country,
@@ -60,7 +60,7 @@ export class UserController {
     request: ExtendedRequest,
     response: Response
   ) {
-    const { id } = request.params;
+    const { _id } = request.user;
 
     const fileUploaded = request.fileUploaded;
 
@@ -69,7 +69,7 @@ export class UserController {
     }
 
     try {
-      const user = await userService.updateProfilePhoto(fileUploaded!, id);
+      const user = await userService.updateProfilePhoto(fileUploaded!, _id);
       return response.status(200).json(user);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -83,10 +83,10 @@ export class UserController {
     request: ExtendedRequest,
     response: Response
   ) {
-    const { id } = request.params;
+    const { _id } = request.user;
 
     try {
-      const user = await userService.deleteProfilePhoto(id);
+      const user = await userService.deleteProfilePhoto(_id);
       return response.status(200).json(user);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -100,9 +100,9 @@ export class UserController {
     request: ExtendedRequest,
     response: Response
   ) {
-    const { id } = request.params;
+    const { _id } = request.user;
     try {
-      const message = await userService.getUserCommunities(id);
+      const message = await userService.getUserCommunities(_id);
       return response.status(200).json(message);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -114,9 +114,10 @@ export class UserController {
 
   public async joinCommunity(request: ExtendedRequest, response: Response) {
     try {
-      const { id, communityId } = request.params;
+      const { _id } = request.user;
+      const { communityId } = request.params;
 
-      const message = await userService.joinCommunity(id, communityId);
+      const message = await userService.joinCommunity(_id, communityId);
       return response.status(200).json(message);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -128,9 +129,10 @@ export class UserController {
 
   public async leaveCommunity(request: ExtendedRequest, response: Response) {
     try {
-      const { id, communityId } = request.params;
+      const { _id } = request.user;
+      const { communityId } = request.params;
 
-      const message = await userService.leaveCommunity(id, communityId);
+      const message = await userService.leaveCommunity(_id, communityId);
       return response.status(200).json(message);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -142,10 +144,10 @@ export class UserController {
 
   public async lendVoice(request: ExtendedRequest, response: Response) {
     try {
-      const { id } = request.params;
+      const { _id } = request.user;
       const payload = request.body;
 
-      const message = await userService.lendVoice(id, payload);
+      const message = await userService.lendVoice(_id, payload);
       return response.status(200).json(message);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -157,10 +159,10 @@ export class UserController {
 
   public async retractVoice(request: ExtendedRequest, response: Response) {
     try {
-      const { id } = request.params;
+      const { _id } = request.user;
       const payload = request.body;
 
-      const message = await userService.retractVoice(id, payload);
+      const message = await userService.retractVoice(_id, payload);
       return response.status(200).json(message);
     } catch (error: any) {
       if (error instanceof AppError) {

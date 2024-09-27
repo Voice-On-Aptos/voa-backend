@@ -98,7 +98,7 @@ export class CommunityService {
       query = { ...query, endDate: { $gt: currentDate } };
     }
 
-    if (status === "inactive") {
+    if (status === "closed") {
       query = { ...query, endDate: { $lt: currentDate } };
     }
 

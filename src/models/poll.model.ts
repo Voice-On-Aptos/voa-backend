@@ -9,7 +9,7 @@ interface IPoll {
   seenBy: IUser[];
   author: IUser;
   community: ICommunity;
-  status: "active" | "inactive";
+  status: "active" | "closed";
 }
 
 const PollSchema = new Schema<IPoll>(
@@ -39,7 +39,7 @@ const PollSchema = new Schema<IPoll>(
     },
     status: {
       type: String,
-      enum: ["active", "inactive"],
+      enum: ["active", "closed"],
       default: "active",
       required: true,
     },

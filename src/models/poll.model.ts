@@ -5,6 +5,7 @@ import { IUser } from "./user.model";
 interface IPoll {
   question: string;
   options: string[];
+  multiple: boolean;
   votes: { by: IUser; vote: string }[];
   seenBy: IUser[];
   author: IUser;
@@ -16,6 +17,7 @@ const PollSchema = new Schema<IPoll>(
   {
     question: { type: String, required: true },
     options: { type: [String], required: true },
+    multiple: { type: Boolean, required: true },
     seenBy: [
       {
         type: Schema.Types.ObjectId,

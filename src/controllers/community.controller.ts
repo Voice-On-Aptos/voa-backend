@@ -161,12 +161,13 @@ export class CommunityController {
     response: Response
   ) {
     const { id } = request.params;
-    const { page, limit } = request.query;
+    const { page, limit, status } = request.query;
     try {
       const proposals = await communityService.getCommunityProposals(
         id,
         Number(page || 1),
-        Number(limit || 30)
+        Number(limit || 30),
+        status as string
       );
       return response.status(200).json(proposals);
     } catch (error: any) {
@@ -198,11 +199,12 @@ export class CommunityController {
   public async getCommunityPolls(request: ExtendedRequest, response: Response) {
     try {
       const { id } = request.params;
-      const { page, limit } = request.query;
+      const { page, limit, status } = request.query;
       const polls = await communityService.getCommunityPolls(
         id,
         Number(page || 1),
-        Number(limit || 30)
+        Number(limit || 30),
+        status as string
       );
       return response.status(200).json(polls);
     } catch (error: any) {

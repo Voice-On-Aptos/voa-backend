@@ -4,13 +4,13 @@ import { Proposal } from "../models/proposal.model";
 
 export class FeedService {
   public async getFeed() {
-    const posts = await Post.find().sort({ createdAt: -1 }).limit(20);
+    const posts = await Post.find().sort({ createdAt: -1 }).limit(30);
 
     // Fetch the 10 most recent polls
-    const polls = await Poll.find().sort({ createdAt: -1 }).limit(20);
+    const polls = await Poll.find().sort({ createdAt: -1 }).limit(30);
 
     // Fetch the 10 most recent proposals
-    const proposals = await Proposal.find().sort({ createdAt: -1 }).limit(20);
+    const proposals = await Proposal.find().sort({ createdAt: -1 }).limit(30);
 
     // Combine all items into one array
     let feed = [

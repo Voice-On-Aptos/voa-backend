@@ -1,20 +1,20 @@
 import express from "express";
-import { deleteImage, uploadImage } from "../middlewares/imagekit.middleware";
-import { UserController } from "./../controllers/user.controller";
 import {
   addressAuthentication,
   userVerification,
 } from "../middlewares/authorization.middleware";
+import { deleteImage, uploadImage } from "../middlewares/imagekit.middleware";
+import { UserController } from "./../controllers/user.controller";
 
 const userController = new UserController();
 const router = express.Router();
 
-router.post("/create", addressAuthentication, userController.createProfile);
+// router.post("/create", addressAuthentication, userController.createProfile);
 
 router
   .route("")
   .get(userVerification, userController.getProfile)
-  .put(userVerification, userController.updateProfile);
+  .put(addressAuthentication, userController.updateProfile);
 
 router.get("/communities", userVerification, userController.getUserCommunities);
 router.post(

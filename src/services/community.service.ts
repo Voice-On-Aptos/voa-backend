@@ -2,6 +2,7 @@ import { Community } from "../models/community.model";
 import { Poll } from "../models/poll.model";
 import { Post } from "../models/post.model";
 import { Proposal } from "../models/proposal.model";
+import { User } from "../models/user.model";
 import AppError from "../utils/helpers/AppError";
 import { paginateModel } from "../utils/helpers/PaginationHelper";
 
@@ -46,6 +47,13 @@ export class CommunityService {
   public async createCommunity(payload: any) {
     const community = new Community(payload);
     await community.save();
+    await User.findOneAndUpdate(
+      {
+        _id: payload?.creator,
+      },
+      { $set: { communities: community?._id } },
+      { new: true }
+    );
     return community;
   }
 

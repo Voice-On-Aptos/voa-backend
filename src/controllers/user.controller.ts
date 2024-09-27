@@ -38,10 +38,9 @@ export class UserController {
   }
 
   public async updateProfile(request: ExtendedRequest, response: Response) {
-    const { _id } = request.user;
     const { email, address, country, username } = request.body;
     try {
-      const user = await userService.updateProfile(_id, {
+      const user = await userService.updateProfile({
         email,
         address,
         country,

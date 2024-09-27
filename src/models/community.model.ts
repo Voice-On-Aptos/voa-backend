@@ -124,4 +124,6 @@ const CommunitySchema = new Schema<ICommunity>(
   }
 );
 
+CommunitySchema.index({ name: "text", description: "text" });
+
 export const Community = model<ICommunity>("Community", CommunitySchema);

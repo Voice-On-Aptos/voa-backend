@@ -43,7 +43,6 @@ const PollSchema = new Schema<IPoll>(
       type: String,
       enum: ["active", "closed"],
       default: "active",
-      required: true,
     },
   },
   {
@@ -51,6 +50,7 @@ const PollSchema = new Schema<IPoll>(
   }
 );
 
-PollSchema.index({ question: "text", options: 1 });
+PollSchema.index({ question: "text" });
+PollSchema.index({ options: 1 });
 
 export const Poll = model<IPoll>("Poll", PollSchema);

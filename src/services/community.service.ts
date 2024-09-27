@@ -129,6 +129,7 @@ export class CommunityService {
       query,
       page,
       limit,
+      {},
       ["author"],
       ["community"]
     );
@@ -154,6 +155,7 @@ export class CommunityService {
       query,
       page,
       limit,
+      {},
       ["author"],
       ["community"]
     );

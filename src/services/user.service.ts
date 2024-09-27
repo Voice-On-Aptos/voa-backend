@@ -4,7 +4,10 @@ import AppError from "../utils/helpers/AppError";
 
 export class UserService {
   public async getProfile(_id?: string) {
-    const user = await User.findOne({ _id });
+    const user = await User.findOne({ _id }).populate({
+      path: "communities",
+      select: "name logo",
+    });
     if (!user) throw new AppError(404, "User not found!");
     return user;
   }
@@ -15,10 +18,12 @@ export class UserService {
     return await user.save();
   }
 
-  public async updateProfile(_id: string, payload: any) {
+  public async updateProfile(payload: any) {
     const { email, username, address, country } = payload;
-    const user = await User.findOne({ _id });
-    if (!user) throw new AppError(404, "user not found");
+    const user = await User.findOne({ address });
+    if (!user) {
+      return this.createProfile(payload);
+    }
     if (email) user.email = email;
     if (country) user.country = country;
     if (username) {

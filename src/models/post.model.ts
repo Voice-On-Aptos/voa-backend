@@ -57,4 +57,6 @@ const PostSchema = new Schema<IPost>(
   }
 );
 
+PostSchema.index({ content: "text" });
+
 export const Post = model<IPost>("Post", PostSchema);

@@ -1,42 +1,38 @@
 import express from "express";
-import { deleteImage, uploadImage } from "../middlewares/imagekit.middleware";
-import { UserController } from "./../controllers/user.controller";
 import {
   addressAuthentication,
   userVerification,
 } from "../middlewares/authorization.middleware";
+import { deleteImage, uploadImage } from "../middlewares/imagekit.middleware";
+import { UserController } from "./../controllers/user.controller";
 
 const userController = new UserController();
 const router = express.Router();
 
-router.post("/create", addressAuthentication, userController.createProfile);
+// router.post("/create", addressAuthentication, userController.createProfile);
 
 router
-  .route("/:id")
+  .route("")
   .get(userVerification, userController.getProfile)
-  .put(userVerification, userController.updateProfile);
+  .put(addressAuthentication, userController.updateProfile);
 
-router.get(
-  "/:id/communities",
-  userVerification,
-  userController.getUserCommunities
-);
+router.get("/communities", userVerification, userController.getUserCommunities);
 router.post(
-  "/:id/communities/:communityId/join",
+  "/communities/:communityId/join",
   userVerification,
   userController.joinCommunity
 );
 router.post(
-  "/:id/communities/:communityId/leave",
+  "/communities/:communityId/leave",
   userVerification,
   userController.leaveCommunity
 );
 
-router.post("/:id/lend", userVerification, userController.lendVoice);
-router.post("/:id/retract", userVerification, userController.retractVoice);
+router.post("/lend", userVerification, userController.lendVoice);
+router.post("/retract", userVerification, userController.retractVoice);
 
 router
-  .route("/:id/photo")
+  .route("/photo")
   .patch(userVerification, uploadImage, userController.updateProfilePhoto)
   .delete(userVerification, deleteImage, userController.deleteProfilePhoto);
 

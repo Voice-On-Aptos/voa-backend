@@ -8,7 +8,46 @@ const communityService = new CommunityService();
 export class CommunityController {
   public async getCommunities(request: ExtendedRequest, response: Response) {
     try {
-      const communities = await communityService.getCommunities();
+      const { page, limit } = request.query;
+      const communities = await communityService.getCommunities(
+        Number(page || 1),
+        Number(limit || 30)
+      );
+      return response.status(200).json(communities);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
+
+  public async getNewCommunities(request: ExtendedRequest, response: Response) {
+    try {
+      const { page, limit } = request.query;
+      const communities = await communityService.getNewCommunities(
+        Number(page || 1),
+        Number(limit || 30)
+      );
+      return response.status(200).json(communities);
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error.message);
+    }
+  }
+
+  public async getPopularCommunities(
+    request: ExtendedRequest,
+    response: Response
+  ) {
+    try {
+      const { page, limit } = request.query;
+      const communities = await communityService.getPopularCommunities(
+        Number(page || 1),
+        Number(limit || 30)
+      );
       return response.status(200).json(communities);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -122,8 +161,14 @@ export class CommunityController {
     response: Response
   ) {
     const { id } = request.params;
+    const { page, limit, status } = request.query;
     try {
-      const proposals = await communityService.getCommunityProposals(id);
+      const proposals = await communityService.getCommunityProposals(
+        id,
+        Number(page || 1),
+        Number(limit || 30),
+        status as string
+      );
       return response.status(200).json(proposals);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -134,9 +179,14 @@ export class CommunityController {
   }
 
   public async getCommunityPosts(request: ExtendedRequest, response: Response) {
-    const { id } = request.params;
     try {
-      const posts = await communityService.getCommunityPosts(id);
+      const { id } = request.params;
+      const { page, limit } = request.query;
+      const posts = await communityService.getCommunityPosts(
+        id,
+        Number(page || 1),
+        Number(limit || 30)
+      );
       return response.status(200).json(posts);
     } catch (error: any) {
       if (error instanceof AppError) {
@@ -147,9 +197,15 @@ export class CommunityController {
   }
 
   public async getCommunityPolls(request: ExtendedRequest, response: Response) {
-    const { id } = request.params;
     try {
-      const polls = await communityService.getCommunityPolls(id);
+      const { id } = request.params;
+      const { page, limit, status } = request.query;
+      const polls = await communityService.getCommunityPolls(
+        id,
+        Number(page || 1),
+        Number(limit || 30),
+        status as string
+      );
       return response.status(200).json(polls);
     } catch (error: any) {
       if (error instanceof AppError) {

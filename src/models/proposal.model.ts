@@ -20,6 +20,7 @@ const ProposalSchema = new Schema<IProposal>(
     title: { type: String, required: true },
     description: { type: String, required: true },
     options: { type: [String], required: true },
+    type: { type: String, enum: ["basic", "weighted"], required: true },
     startDate: {
       type: Date,
       required: true,

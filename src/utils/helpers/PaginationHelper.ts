@@ -7,6 +7,7 @@ async function paginateModel(
   limit = 10,
   sort: any = { createdAt: -1 },
   populate: any = [],
+  populate2: any = [],
   exclude: string = ""
 ) {
   try {
@@ -17,6 +18,7 @@ async function paginateModel(
     const documents = await model
       .find(query)
       .populate(...populate)
+      .populate(...populate2)
       .skip(skip)
       .limit(limit)
       .sort(sort)

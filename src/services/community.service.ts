@@ -88,7 +88,7 @@ export class CommunityService {
     limit: number = 30,
     status: string = ""
   ) {
-    const community = await Community.findById(_id).populate("author");
+    const community = await Community.findById(_id);
     if (!community) {
       throw new AppError(404, "Community not found");
     }
@@ -102,7 +102,15 @@ export class CommunityService {
       query = { ...query, endDate: { $lt: currentDate } };
     }
 
-    const proposals = await paginateModel(Proposal, query, page, limit);
+    const proposals = await paginateModel(
+      Proposal,
+      query,
+      page,
+      limit,
+      {},
+      ["author"],
+      ["community"]
+    );
     return { name: community?.name, proposals };
   }
 
@@ -111,12 +119,19 @@ export class CommunityService {
     page: number = 1,
     limit: number = 30
   ) {
-    const community = await Community.findById(_id).populate("author");
+    const community = await Community.findById(_id);
     if (!community) {
       throw new AppError(404, "Community not found");
     }
     const query = { community: _id };
-    const posts = await paginateModel(Post, query, page, limit);
+    const posts = await paginateModel(
+      Post,
+      query,
+      page,
+      limit,
+      ["author"],
+      ["community"]
+    );
     return { name: community?.name, posts };
   }
 
@@ -126,7 +141,7 @@ export class CommunityService {
     limit: number = 30,
     status: string = ""
   ) {
-    const community = await Community.findById(_id).populate("author");
+    const community = await Community.findById(_id);
     if (!community) {
       throw new AppError(404, "Community not found");
     }
@@ -134,7 +149,14 @@ export class CommunityService {
     if (status) {
       query = { ...query, status };
     }
-    const polls = await paginateModel(Poll, query, page, limit);
+    const polls = await paginateModel(
+      Poll,
+      query,
+      page,
+      limit,
+      ["author"],
+      ["community"]
+    );
     return { name: community?.name, polls };
   }
 

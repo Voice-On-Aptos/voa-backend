@@ -31,16 +31,11 @@ export class CommunityService {
   }
 
   public async getPopularCommunities(page: number = 1, limit: number = 30) {
-    const query = { members: { $size: { $gt: 50 } } };
-    const sort = { members: -1 };
-    const communities = await paginateModel(
-      Community,
-      query,
-      page,
-      limit,
-      sort,
-      ["creator", "address"]
-    );
+    const query = { $expr: { $gt: [{ $size: "$members" }, 50] } };
+    const communities = await paginateModel(Community, query, page, limit, {}, [
+      "creator",
+      "address",
+    ]);
     return communities;
   }
 

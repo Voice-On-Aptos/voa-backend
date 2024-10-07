@@ -214,4 +214,24 @@ export class CommunityController {
       return response.status(500).json(error?.message);
     }
   }
+
+  public async getUserEngagements(
+    request: ExtendedRequest,
+    response: Response
+  ) {
+    const { id } = request.params;
+    const { userId } = request.query;
+    try {
+      const result = await communityService.getUserEngagements(
+        id,
+        userId as string
+      );
+      return response.status(200).json({ ...result });
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        return response.status(error.statusCode).json(error.message);
+      }
+      return response.status(500).json(error?.message);
+    }
+  }
 }

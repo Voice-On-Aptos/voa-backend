@@ -185,4 +185,26 @@ export class CommunityService {
   }
 
   //user engagement on community
+  public async getUserEngagements(_id: string, userId: string) {
+    const community = await Community.findById(_id);
+    if (!community) throw new AppError(404, "Community not found");
+    const posts = await Post.find({ community: _id, author: userId })
+      .populate("author")
+      .populate("community");
+    const polls = await Poll.find({ community: _id, author: userId })
+      .populate("author")
+      .populate("community");
+
+    const proposals = await Proposal.find({ community: _id, author: userId })
+      .populate("author")
+      .populate("community");
+
+    const data = [
+      ...posts.map((post) => ({ type: "post", data: post })),
+      ...polls.map((poll) => ({ type: "poll", data: poll })),
+      ...proposals.map((proposal) => ({ type: "proposal", data: proposal })),
+    ];
+
+    return { community, data };
+  }
 }

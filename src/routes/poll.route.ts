@@ -21,7 +21,11 @@ router
   .patch(userVerification, pollController.updatePoll)
   .delete(userVerification, pollController.deletePoll);
 
-router.post("/:id/vote", pollController.voteOnPoll);
-router.post("/:id/viewer/:userId", pollController.updateSeenByPoll);
+router.post("/:id/vote", userVerification, pollController.voteOnPoll);
+router.post(
+  "/:id/viewer/:userId",
+  userVerification,
+  pollController.updateSeenByPoll
+);
 
 export default router;

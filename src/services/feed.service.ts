@@ -3,14 +3,14 @@ import { Post } from "../models/post.model";
 import { Proposal } from "../models/proposal.model";
 
 export class FeedService {
-  public async getFeed() {
-    const posts = await Post.find().sort({ createdAt: -1 }).limit(30);
+  public async getFeed(limit = 30) {
+    const posts = await Post.find().populate("author").populate("community").sort({ createdAt: -1 }).limit(limit);
 
     // Fetch the 10 most recent polls
-    const polls = await Poll.find().sort({ createdAt: -1 }).limit(30);
+    const polls = await Poll.find().populate("author").populate("community").sort({ createdAt: -1 }).limit(limit);
 
     // Fetch the 10 most recent proposals
-    const proposals = await Proposal.find().sort({ createdAt: -1 }).limit(30);
+    const proposals = await Proposal.find().populate("author").populate("community").sort({ createdAt: -1 }).limit(limit);
 
     // Combine all items into one array
     let feed = [

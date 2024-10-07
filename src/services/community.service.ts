@@ -82,7 +82,11 @@ export class CommunityService {
   public async getCommunityMembers(_id: string) {
     const community = await Community.findOne({ _id }).populate("members");
 
-    return { name: community?.name, members: community?.members };
+    return {
+      name: community?.name,
+      logo: community?.logo,
+      members: community?.members,
+    };
   }
 
   public async getCommunityProposals(
@@ -114,7 +118,7 @@ export class CommunityService {
       ["author"],
       ["community"]
     );
-    return { name: community?.name, proposals };
+    return { name: community?.name, logo: community?.logo, proposals };
   }
 
   public async getCommunityPosts(
@@ -136,7 +140,7 @@ export class CommunityService {
       ["author"],
       ["community"]
     );
-    return { name: community?.name, posts };
+    return { name: community?.name, logo: community?.logo, posts };
   }
 
   public async getCommunityPolls(
@@ -162,7 +166,7 @@ export class CommunityService {
       ["author"],
       ["community"]
     );
-    return { name: community?.name, polls };
+    return { name: community?.name, logo: community?.logo, polls };
   }
 
   public async getCommunityStats(_id: string) {

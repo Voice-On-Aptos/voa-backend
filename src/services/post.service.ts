@@ -10,7 +10,13 @@ import { Post } from "./../models/post.model";
 
 export class PostService {
   public async getPost(_id: string) {
-    const post = await Post.findOne({ _id }).populate("author");
+    const post = await Post.findOne({ _id })
+      .populate("author")
+      .populate("votes.by")
+      .populate({
+        path: "community",
+        select: "post comment",
+      });
     if (!post) throw new AppError(404, "Post not found");
     return post;
   }

@@ -15,7 +15,7 @@ export class SearchController {
       const search = await searchService.search(query as string);
       response.status(200).json(search);
     } catch (error: any) {
-      console.log({ error });
+      // console.log({ error });
       if (error instanceof AppError) {
         response.status(error.statusCode).json({ message: error.message });
       } else {

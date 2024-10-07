@@ -10,7 +10,13 @@ import { Proposal } from "./../models/proposal.model";
 
 export class ProposalService {
   public async getProposal(_id: string) {
-    const proposal = await Proposal.findOne({ _id }).populate("author");
+    const proposal = await Proposal.findOne({ _id })
+      .populate("author")
+      .populate("votes.by")
+      .populate({
+        path: "community",
+        select: "proposal comment",
+      });
     if (!proposal) throw new AppError(404, "Proposal not found");
     return proposal;
   }

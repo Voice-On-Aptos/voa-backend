@@ -22,11 +22,16 @@ router.get("/:id/statistics", communityController.getCommunityStats);
 
 router.get("/:id/members", communityController.getCommunityMembers);
 
-//proposals endpoints
 router.get("/:id/proposals", communityController.getCommunityProposals);
 
 router.get("/:id/posts", communityController.getCommunityPosts);
 
 router.get("/:id/polls", communityController.getCommunityPolls);
+
+router.get(
+  "/:id/engagements",
+  userVerification,
+  communityController.getUserEngagements
+);
 
 export default router;

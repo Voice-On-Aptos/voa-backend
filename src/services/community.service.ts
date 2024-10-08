@@ -82,7 +82,11 @@ export class CommunityService {
   public async getCommunityMembers(_id: string) {
     const community = await Community.findOne({ _id }).populate("members");
 
-    return { name: community?.name, members: community?.members };
+    return {
+      name: community?.name,
+      logo: community?.logo,
+      members: community?.members,
+    };
   }
 
   public async getCommunityProposals(
@@ -114,7 +118,7 @@ export class CommunityService {
       ["author"],
       ["community"]
     );
-    return { name: community?.name, proposals };
+    return { name: community?.name, logo: community?.logo, proposals };
   }
 
   public async getCommunityPosts(
@@ -136,7 +140,7 @@ export class CommunityService {
       ["author"],
       ["community"]
     );
-    return { name: community?.name, posts };
+    return { name: community?.name, logo: community?.logo, posts };
   }
 
   public async getCommunityPolls(
@@ -162,7 +166,7 @@ export class CommunityService {
       ["author"],
       ["community"]
     );
-    return { name: community?.name, polls };
+    return { name: community?.name, logo: community?.logo, polls };
   }
 
   public async getCommunityStats(_id: string) {
@@ -181,4 +185,26 @@ export class CommunityService {
   }
 
   //user engagement on community
+  public async getUserEngagements(_id: string, userId: string) {
+    const community = await Community.findById(_id);
+    if (!community) throw new AppError(404, "Community not found");
+    const posts = await Post.find({ community: _id, author: userId })
+      .populate("author")
+      .populate("community");
+    const polls = await Poll.find({ community: _id, author: userId })
+      .populate("author")
+      .populate("community");
+
+    const proposals = await Proposal.find({ community: _id, author: userId })
+      .populate("author")
+      .populate("community");
+
+    const data = [
+      ...posts.map((post) => ({ type: "post", data: post })),
+      ...polls.map((poll) => ({ type: "poll", data: poll })),
+      ...proposals.map((proposal) => ({ type: "proposal", data: proposal })),
+    ];
+
+    return { community, data };
+  }
 }

@@ -1,8 +1,24 @@
 import { Comment, Reply } from "../models/comment.model";
-
 export class CommentService {
-  public async getComments(parentId: string) {
-    const comments = await Comment.find({ parentId }).populate("replies");
+  public async getComments(parentId: string, type: string) {
+    const comments = await Comment.find({
+      parentId: parentId,
+      __t:
+        type === "post"
+          ? "PostComment"
+          : type === "proposal"
+          ? "ProposalComment"
+          : "",
+    })
+      .populate({
+        path: "replies",
+        populate: {
+          path: "author",
+          model: "User",
+        },
+      })
+      .populate("author")
+      .sort({ updatedAt: -1 });
     return comments;
   }
 
@@ -40,8 +56,21 @@ export class CommentService {
   }
 
   public async replyComment(payload: any) {
+    const { comment } = payload;
     const reply = new Reply(payload);
     await reply.save();
+
+    await Comment.findOneAndUpdate(
+      {
+        _id: comment,
+      },
+      {
+        $push: { replies: reply._id },
+      },
+      {
+        new: true,
+      }
+    );
 
     return "Successfully replied comment";
   }

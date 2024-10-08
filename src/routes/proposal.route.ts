@@ -24,12 +24,16 @@ router
   .patch(userVerification, proposalController.updateProposal)
   .delete(userVerification, proposalController.deleteProposal);
 
-router.post("/:id/vote", proposalController.voteOnProposal);
-router.post("/:id/viewer/:userId", proposalController.updateSeenByProposal);
+router.post("/:id/vote", userVerification, proposalController.voteOnProposal);
+router.post(
+  "/:id/viewer/:userId",
+  userVerification,
+  proposalController.updateSeenByProposal
+);
 
 router
   .route("/:id/comments")
   .get(commentController.getComments)
-  .post(proposalController.commentOnProposal);
+  .post(userVerification, proposalController.commentOnProposal);
 
 export default router;

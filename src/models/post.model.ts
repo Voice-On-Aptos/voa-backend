@@ -13,6 +13,7 @@ interface IPost {
   applauds: IUser[];
   lentVoices: { by: IUser; amount: number }[];
   community: ICommunity;
+  comments: number;
 }
 
 const PostSchema = new Schema<IPost>(
@@ -50,6 +51,10 @@ const PostSchema = new Schema<IPost>(
       type: Schema.Types.ObjectId,
       ref: "Community",
       required: true,
+    },
+    comments: {
+      type: Number,
+      default: 0,
     },
   },
   {

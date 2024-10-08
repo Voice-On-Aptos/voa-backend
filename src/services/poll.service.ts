@@ -9,7 +9,13 @@ import { Poll } from "./../models/poll.model";
 
 export class PollService {
   public async getPoll(_id: string) {
-    const poll = await Poll.findOne({ _id }).populate("author");
+    const poll = await Poll.findOne({ _id })
+      .populate("author")
+      .populate("votes.by")
+      .populate({
+        path: "community",
+        select: "poll",
+      });
     if (!poll) throw new AppError(404, "Poll not found");
     return poll;
   }

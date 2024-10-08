@@ -11,7 +11,8 @@ export class FeedController {
     response: Response
   ): Promise<void> {
     try {
-      const feed = await feedService.getFeed();
+      const { limit, status } = request.query;
+      const feed = await feedService.getFeed(Number(limit));
       response.status(200).json(feed);
     } catch (error: any) {
       if (error instanceof AppError) {

@@ -11,17 +11,26 @@ export class SearchService {
     // Perform search on Post collection
     const posts = await Post.find(searchQuery, {
       score: { $meta: "textScore" },
-    }).sort({ score: { $meta: "textScore" } });
+    })
+      .populate("author")
+      .populate("community")
+      .sort({ score: { $meta: "textScore" } });
 
     // Perform search on Poll collection
     const polls = await Poll.find(searchQuery, {
       score: { $meta: "textScore" },
-    }).sort({ score: { $meta: "textScore" } });
+    })
+      .populate("author")
+      .populate("community")
+      .sort({ score: { $meta: "textScore" } });
 
     // Perform search on Proposal collection
     const proposals = await Proposal.find(searchQuery, {
       score: { $meta: "textScore" },
-    }).sort({ score: { $meta: "textScore" } });
+    })
+      .populate("author")
+      .populate("community")
+      .sort({ score: { $meta: "textScore" } });
 
     // Combine results and label them by type
     let searchResults = [
@@ -30,12 +39,12 @@ export class SearchService {
       ...proposals.map((proposal) => ({ type: "proposal", data: proposal })),
     ];
 
-     // Optionally, sort all results by relevance (textScore) if needed
-     searchResults = searchResults.sort((a: any, b: any) => {
-        const scoreA = a?.data?.score ?? 0;
-        const scoreB = b?.data?.score ?? 0;
-        return scoreB - scoreA; // Higher scores first
-      });
+    // Optionally, sort all results by relevance (textScore) if needed
+    searchResults = searchResults.sort((a: any, b: any) => {
+      const scoreA = a?.data?.score ?? 0;
+      const scoreB = b?.data?.score ?? 0;
+      return scoreB - scoreA; // Higher scores first
+    });
 
     return searchResults;
   }

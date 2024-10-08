@@ -56,7 +56,9 @@ class App {
     this.app.get("/", (request: Request, response: Response) => {
       response.send("Welcome to VOA");
     });
+
     //add notification routes
+
     this.app.use(`/api/${process.env.API_VERSION}/feed`, feedRoute);
     this.app.use(`/api/${process.env.API_VERSION}/search`, searchRoute);
     this.app.use(`/api/${process.env.API_VERSION}/user`, userRoute);

@@ -9,7 +9,16 @@ export class CommentService {
           : type === "proposal"
           ? "ProposalComment"
           : "",
-    }).populate("replies");
+    })
+      .populate({
+        path: "replies",
+        populate: {
+          path: "author",
+          model: "User",
+        },
+      })
+      .populate("author")
+      .sort({ updatedAt: -1 });
     return comments;
   }
 
@@ -47,8 +56,21 @@ export class CommentService {
   }
 
   public async replyComment(payload: any) {
+    const { comment } = payload;
     const reply = new Reply(payload);
     await reply.save();
+
+    await Comment.findOneAndUpdate(
+      {
+        _id: comment,
+      },
+      {
+        $push: { replies: reply._id },
+      },
+      {
+        new: true,
+      }
+    );
 
     return "Successfully replied comment";
   }

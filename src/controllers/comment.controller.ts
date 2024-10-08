@@ -9,7 +9,8 @@ export class CommentController {
   public async getComments(request: ExtendedRequest, response: Response) {
     try {
       const { id } = request.params;
-      const comments = await commentService.getComments(id);
+      const { type } = request.query;
+      const comments = await commentService.getComments(id, type as string);
       return response.status(200).json(comments);
     } catch (error: any) {
       if (error instanceof AppError) {

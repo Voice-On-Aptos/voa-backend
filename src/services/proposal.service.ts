@@ -79,7 +79,22 @@ export class ProposalService {
   }
 
   public async commentOnProposal(_id: string, payload: any) {
-    const comment = new ProposalComment({ ...payload, parentId: _id });
+    await Proposal.findOneAndUpdate(
+      {
+        _id,
+      },
+      {
+        $inc: { comments: 1 },
+      },
+      {
+        new: true,
+      }
+    );
+    const comment = new ProposalComment({
+      ...payload,
+      parentId: _id,
+      type: "proposal",
+    });
     await comment.save();
     return "Successfully commented on proposal";
   }

@@ -12,11 +12,14 @@ export class PostService {
   public async getPost(_id: string) {
     const post = await Post.findOne({ _id })
       .populate("author")
-      .populate("votes.by")
       .populate({
-        path: "community",
-        select: "post comment",
+        path: "community", // Populates the community object
+        populate: {
+          path: "creator", // Populates the creator field within the community
+          model: "User", // Specify the model to populate
+        },
       });
+
     if (!post) throw new AppError(404, "Post not found");
     return post;
   }
@@ -51,7 +54,7 @@ export class PostService {
         _id,
       },
       {
-        $set: { seenBy: userId },
+        $set: { applauds: userId },
       },
       {
         new: true,
@@ -95,7 +98,22 @@ export class PostService {
   }
 
   public async commentOnPost(_id: string, payload: any) {
-    const comment = new PostComment({ ...payload, parentId: _id });
+    await Post.findOneAndUpdate(
+      {
+        _id,
+      },
+      {
+        $inc: { comments: 1 },
+      },
+      {
+        new: true,
+      }
+    );
+    const comment = new PostComment({
+      ...payload,
+      parentId: _id,
+      type: "post",
+    });
     await comment.save();
     return comment;
   }

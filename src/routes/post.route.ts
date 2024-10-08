@@ -29,9 +29,13 @@ router.post("/:id/viewer/:userId", postController.updateSeenByPost);
 router
   .route("/:id/comments")
   .get(commentController.getComments)
-  .post(postController.commentOnPost);
+  .post(userVerification, postController.commentOnPost);
 
-router.post("/:id/applaud", postController.applaudPost);
-router.post("/:id/lend-voice", postController.lendVoiceOnPost);
+router.post("/:id/applaud", userVerification, postController.applaudPost);
+router.post(
+  "/:id/lend-voice",
+  userVerification,
+  postController.lendVoiceOnPost
+);
 
 export default router;

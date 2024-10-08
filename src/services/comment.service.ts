@@ -1,8 +1,15 @@
 import { Comment, Reply } from "../models/comment.model";
-
 export class CommentService {
-  public async getComments(parentId: string) {
-    const comments = await Comment.find({ parentId }).populate("replies");
+  public async getComments(parentId: string, type: string) {
+    const comments = await Comment.find({
+      parentId: parentId,
+      __t:
+        type === "post"
+          ? "PostComment"
+          : type === "proposal"
+          ? "ProposalComment"
+          : "",
+    }).populate("replies");
     return comments;
   }
 

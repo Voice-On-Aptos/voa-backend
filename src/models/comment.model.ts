@@ -82,17 +82,17 @@ export const Comment = model<IComment>("Comment", CommentSchema);
 // Discriminator for Post Comments
 export const PostComment = Comment.discriminator(
   "PostComment",
-  new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "post" } })
+  new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "Post" } })
 );
 
 // Discriminator for Proposal Comments
 export const ProposalComment = Comment.discriminator(
   "ProposalComment",
-  new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "proposal" } })
+  new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "Proposal" } })
 );
 
 // // Discriminator for Poll Comments
 // export const PollComment = Comment.discriminator(
 //   "PollComment",
-//   new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "poll" } })
+//   new Schema({ parentId: { type: Schema.Types.ObjectId, ref: "Poll" } })
 // );

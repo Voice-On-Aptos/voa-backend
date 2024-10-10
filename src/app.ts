@@ -11,6 +11,7 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import db from "./config/database";
+import aiRoute from "./routes/ai.route";
 import commentRoute from "./routes/comment.route";
 import communityRoute from "./routes/community.route";
 import feedRoute from "./routes/feed.route";
@@ -68,6 +69,7 @@ class App {
     this.app.use(`/api/${process.env.API_VERSION}/poll`, pollRoute);
     this.app.use(`/api/${process.env.API_VERSION}/comment`, commentRoute);
     this.app.use(`/api/${process.env.API_VERSION}/upload`, uploadRoute);
+    // this.app.use(`/api/${process.env.API_VERSION}/ai/generate`, aiRoute);
   }
 }
 

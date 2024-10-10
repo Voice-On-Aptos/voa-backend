@@ -69,7 +69,7 @@ class App {
     this.app.use(`/api/${process.env.API_VERSION}/poll`, pollRoute);
     this.app.use(`/api/${process.env.API_VERSION}/comment`, commentRoute);
     this.app.use(`/api/${process.env.API_VERSION}/upload`, uploadRoute);
-    this.app.use(`/api/${process.env.API_VERSION}/ai/generate`, aiRoute);
+    // this.app.use(`/api/${process.env.API_VERSION}/ai/generate`, aiRoute);
   }
 }
 

@@ -67,7 +67,7 @@ export class PollService {
         _id,
       },
       {
-        $set: { seenBy: userId },
+        $addToSet: { seenBy: userId },
       },
       {
         new: true,

@@ -68,7 +68,7 @@ export class ProposalService {
         _id,
       },
       {
-        $set: { seenBy: userId },
+        $addToSet: { seenBy: userId },
       },
       {
         new: true,

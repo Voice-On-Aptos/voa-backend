@@ -60,8 +60,7 @@ const CommunitySchema = new Schema<ICommunity>(
       required: true,
     },
     contract_address: {
-      type: String,
-      required: true,
+      type: String
     },
     creator: {
       type: Schema.Types.ObjectId,

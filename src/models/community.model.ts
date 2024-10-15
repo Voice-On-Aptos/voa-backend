@@ -17,7 +17,7 @@ const PropSchema = new Schema<IProps>(
 export interface ICommunity {
   name: string;
   description: string;
-  token_address: string;
+  contract_address: string;
   creator: IUser;
   twitter: string;
   website: string;
@@ -59,7 +59,7 @@ const CommunitySchema = new Schema<ICommunity>(
       type: String,
       required: true,
     },
-    token_address: {
+    contract_address: {
       type: String,
       required: true,
     },

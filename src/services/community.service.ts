@@ -46,7 +46,7 @@ export class CommunityService {
       {
         _id: payload?.creator,
       },
-      { $set: { communities: community?._id } },
+      { $push: { communities: community?._id } },
       { new: true }
     );
     return community;

@@ -78,7 +78,7 @@ export class UserService {
       {
         _id,
       },
-      { $set: { communities: communityId } },
+      { $push: { communities: communityId } },
       { new: true }
     );
 

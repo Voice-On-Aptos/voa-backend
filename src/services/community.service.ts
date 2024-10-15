@@ -40,7 +40,10 @@ export class CommunityService {
   }
 
   public async createCommunity(payload: any) {
-    const community = new Community(payload);
+    const community = new Community({
+      ...payload,
+      members: [payload?.creator],
+    });
     await community.save();
     await User.findOneAndUpdate(
       {

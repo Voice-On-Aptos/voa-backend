@@ -28,7 +28,7 @@ export class CommentService {
         _id,
       },
       {
-        $set: { applauds: userId },
+        $addToSet: { applauds: userId },
       },
       {
         new: true,
@@ -81,7 +81,7 @@ export class CommentService {
         _id,
       },
       {
-        $set: { applauds: userId },
+        $addToSet: { applauds: userId },
       },
       {
         new: true,

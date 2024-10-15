@@ -16,7 +16,7 @@ export class CommunityService {
     return communities;
   }
 
-  public async getNewCommunities(page: number = 1, limit: number = 30) {
+  public async getNewCommunities(page: number = 1, limit: number = 18) {
     const query = {};
     const sort = { createdAt: -1 };
     const communities = await paginateModel(
@@ -30,7 +30,7 @@ export class CommunityService {
     return communities;
   }
 
-  public async getPopularCommunities(page: number = 1, limit: number = 30) {
+  public async getPopularCommunities(page: number = 1, limit: number = 18) {
     const query = { $expr: { $gt: [{ $size: "$members" }, 50] } };
     const communities = await paginateModel(Community, query, page, limit, {}, [
       "creator",

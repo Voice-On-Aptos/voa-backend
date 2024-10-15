@@ -86,7 +86,7 @@ export class UserService {
       {
         _id: communityId,
       },
-      { $set: { members: _id } },
+      { $addToSet: { members: _id } },
       { new: true }
     );
 

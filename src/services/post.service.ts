@@ -54,7 +54,7 @@ export class PostService {
         _id,
       },
       {
-        $set: { applauds: userId },
+        $addToSet: { applauds: userId },
       },
       {
         new: true,
@@ -87,7 +87,7 @@ export class PostService {
         _id,
       },
       {
-        $set: { seenBy: userId },
+        $addToSet: { seenBy: userId },
       },
       {
         new: true,
